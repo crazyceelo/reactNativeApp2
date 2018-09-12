@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import firebase from "firebase";
 import { Header } from "./src/components/common";
+import LoginForm from "./src/components/LoginForm";
 
 export default class App extends React.Component {
   componentWillMount() {
@@ -19,7 +20,7 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         <Header headerText="Authentication" />
-        <Text>asdf</Text>
+        <LoginForm />
       </View>
     );
   }
