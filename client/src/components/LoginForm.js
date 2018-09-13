@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Text, StyleSheet } from "react-native";
+import firebase from "firebase";
 import { Button, Card, CardSection, Input } from "./common";
 
 class LoginForm extends Component {
@@ -6,8 +8,26 @@ class LoginForm extends Component {
     super();
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      error: ""
     };
+  }
+
+  onButtonPress() {
+    const { email, password, error } = this.state;
+
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .catch(() => {
+        firebase
+          .auth()
+          .createUserWithEmailAndPassword(email, password)
+          .catch(err => {
+            let newError = err.toString();
+            this.setState({ error: newError });
+          });
+      });
   }
 
   render() {
@@ -32,12 +52,22 @@ class LoginForm extends Component {
           />
         </CardSection>
 
+        <Text style={styles.errorTextStyle}>{this.state.error}</Text>
+
         <CardSection>
-          <Button>Log in</Button>
+          <Button onPress={this.onButtonPress.bind(this)}>Log in</Button>
         </CardSection>
       </Card>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  errorTextStyle: {
+    fontSize: 20,
+    alignSelf: "center",
+    color: "red"
+  }
+});
 
 export default LoginForm;
